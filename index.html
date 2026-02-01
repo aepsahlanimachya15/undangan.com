@@ -19,7 +19,9 @@
             overflow-x: hidden; 
             font-family: 'Montserrat', sans-serif; 
             background-color: var(--blush); 
-            color: var(--text-main); 
+            color: var(--text-main);
+            /* Menambahkan tekstur kertas halus */
+            background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
         }
         canvas { 
             display: block; 
@@ -30,21 +32,35 @@
             pointer-events: none; 
         }
         
-        /* Background Styling */
+        /* BACKGROUND BARU: TEMA MASJID */
         .main-bg {
             position: fixed;
             inset: 0;
             z-index: 0;
-            background-image: linear-gradient(rgba(255, 245, 245, 0.9), rgba(255, 245, 245, 0.9)), 
-                              url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000');
+            /* Mengganti gambar bunga dengan gambar Masjid yang elegan */
+            background-image: linear-gradient(rgba(255, 245, 245, 0.85), rgba(255, 245, 245, 0.7)), 
+                              url('https://upload.wikimedia.org/wikipedia/commons/9/90/Kabood_%28Blue%29_mosque%2C_Tabriz%2C_Iran.jpg');
             background-size: cover;
-            background-position: center;
+            background-position: center bottom; /* Fokus ke bagian bawah arsitektur */
             background-attachment: fixed;
             opacity: 0;
             transition: opacity 2s ease;
         }
         .main-bg.visible { opacity: 1; }
 
+        /* Dekorasi Sudut Floral (CSS Only) */
+        .floral-corner {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            pointer-events: none;
+            z-index: 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.15; /* Transparan agar tidak mengganggu teks */
+            mix-blend-mode: multiply;
+        }
+        
         .content-overlay { position: relative; z-index: 10; }
         .interactive { pointer-events: auto; }
         
@@ -57,18 +73,35 @@
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
         .glass-soft { 
-            background: rgba(255, 255, 255, 0.6); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.7); 
+            background: rgba(255, 255, 255, 0.65); /* Sedikit lebih solid agar kontras dengan detail masjid */
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.8); 
             box-shadow: 0 8px 32px 0 rgba(229, 62, 62, 0.05);
         }
 
         #cover {
             position: fixed; inset: 0; z-index: 100; 
-            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            /* Background cover dengan nuansa Islami yang lembut */
+            background: linear-gradient(135deg, #fff0f0 0%, #ffe4e4 100%), 
+                        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e53e3e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
         }
+
+        /* Frame dekoratif di cover */
+        .cover-frame {
+            position: absolute;
+            inset: 20px;
+            border: 1px solid rgba(229, 62, 62, 0.2);
+            border-radius: 20px; /* Bentuk kubah sedikit melengkung */
+            pointer-events: none;
+        }
+        .cover-frame::before {
+            content: ''; position: absolute; inset: 4px;
+            border: 1px solid rgba(229, 62, 62, 0.1);
+            border-radius: 16px;
+        }
+
         .hide-cover { transform: translateY(-100%); }
 
         .btn-romantic {
@@ -81,6 +114,8 @@
             letter-spacing: 2px;
             font-size: 12px;
             font-weight: 600;
+            position: relative;
+            z-index: 10;
         }
         .btn-romantic:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(229, 62, 62, 0.2); }
 
@@ -96,7 +131,7 @@
             overflow: hidden;
             border-radius: 50%;
             border: 6px solid white;
-            box-shadow: 0 15px 35px rgba(229, 62, 62, 0.1);
+            box-shadow: 0 15px 35px rgba(229, 62, 62, 0.15);
             transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             position: relative;
             z-index: 2;
@@ -127,7 +162,7 @@
 
         .photo-container:hover .photo-frame {
             transform: scale(1.05);
-            box-shadow: 0 20px 45px rgba(229, 62, 62, 0.2);
+            box-shadow: 0 20px 45px rgba(229, 62, 62, 0.25);
         }
 
         .photo-container:hover::after {
@@ -185,26 +220,43 @@
         #custom-toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+        /* Custom Scrollbar for Wishes */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(229, 62, 62, 0.3);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(229, 62, 62, 0.5);
+        }
     </style>
 </head>
 <body>
 
     <div id="custom-toast">Pesan berhasil dikirim!</div>
 
-    <!-- Background Layer -->
+    <!-- Background Layer (Updated Image) -->
     <div id="main-bg-layer" class="main-bg"></div>
 
     <div id="cover">
-        <div class="text-center px-4">
+        <div class="cover-frame"></div>
+        <div class="text-center px-4 relative z-10">
             <p class="font-serif italic text-lg text-rose-400 mb-2">Pernikahan Dari</p>
-            <h1 class="font-cursive text-5xl md:text-7xl text-rose-800 mb-8 leading-tight">Aep Sahlani & Nurmeida</h1>
+            <h1 class="font-cursive text-5xl md:text-7xl text-rose-800 mb-8 leading-tight drop-shadow-sm">Aep Sahlani & Nurmeida</h1>
             <button onclick="openInvitation()" class="interactive btn-romantic uppercase">
                 Buka Undangan
             </button>
         </div>
     </div>
 
-    <button id="music-btn" onclick="toggleMusic()" class="fixed top-6 right-6 z-[100] interactive w-10 h-10 rounded-full glass-soft flex items-center justify-center text-rose-600 hidden">
+    <button id="music-btn" onclick="toggleMusic()" class="fixed top-6 right-6 z-[100] interactive w-10 h-10 rounded-full glass-soft flex items-center justify-center text-rose-600 hidden hover:scale-110 transition-transform">
         <span id="music-status">♫</span>
     </button>
     <audio id="bg-music" loop>
@@ -215,9 +267,11 @@
         <!-- Bagian Hero -->
         <section class="h-screen flex flex-col justify-center items-center text-center px-6">
             <div class="reveal">
-                <p class="font-serif italic text-xl text-rose-500 mb-4">Membangun cinta yang abadi</p>
-                <h1 class="font-cursive text-6xl md:text-8xl text-rose-900 mb-6">Aep & Meida</h1>
-                <p class="tracking-[0.3em] uppercase text-sm text-gray-400">Sabtu, 14 Februari 2026</p>
+                <p class="font-serif italic text-xl text-rose-600 mb-4 font-medium">Membangun cinta yang abadi</p>
+                <h1 class="font-cursive text-6xl md:text-8xl text-rose-900 mb-6 drop-shadow-sm">Aep & Meida</h1>
+                <div class="inline-block border-y border-rose-300 py-2 px-6">
+                    <p class="tracking-[0.3em] uppercase text-sm text-gray-600 font-semibold">Sabtu, 14 Februari 2026</p>
+                </div>
             </div>
         </section>
 
@@ -231,7 +285,7 @@
                         </div>
                     </div>
                     <h2 class="font-serif text-3xl font-bold text-rose-900">Aep Sahlani Machya, S.Kom</h2>
-                    <p class="mt-4 text-gray-500 italic">Putra tercinta dari Bpk. Drs.AFANDI & Dra.KARIH</p>
+                    <p class="mt-4 text-gray-600 italic font-medium">Putra tercinta dari Bpk. Drs.AFANDI & Dra.KARIH</p>
                 </div>
                 
                 <div class="text-center reveal" style="transition-delay: 0.3s;">
@@ -241,7 +295,7 @@
                         </div>
                     </div>
                     <h2 class="font-serif text-3xl font-bold text-rose-900">Nurmeida Widi Astuti, S.H</h2>
-                    <p class="mt-4 text-gray-500 italic">Putri tercinta dari Bpk. MISNAN & Ibu Dwi Purwanti</p>
+                    <p class="mt-4 text-gray-600 italic font-medium">Putri tercinta dari Bpk. MISNAN & Ibu Dwi Purwanti</p>
                 </div>
             </div>
         </section>
@@ -249,18 +303,18 @@
         <!-- Detail Acara -->
         <section class="py-24 px-6">
             <div class="max-w-4xl mx-auto text-center">
-                <h2 class="font-serif italic text-4xl text-rose-900 mb-12 reveal">Rangkaian Acara</h2>
+                <h2 class="font-serif italic text-4xl text-rose-900 mb-12 reveal font-bold">Rangkaian Acara</h2>
                 
-                <div class="glass-soft p-8 md:p-12 reveal interactive mb-12 rounded-[40px]">
-                    <div class="text-rose-300 text-3xl mb-8">❦</div>
+                <div class="glass-soft p-8 md:p-12 reveal interactive mb-12 rounded-[40px] border border-white/60">
+                    <div class="text-rose-400 text-3xl mb-8">❦</div>
                     
                     <div class="grid md:grid-cols-2 gap-12 divide-y md:divide-y-0 md:divide-x divide-rose-200">
                         <div class="pb-8 md:pb-0 md:pr-6">
-                            <h3 class="font-serif text-2xl mb-4 text-rose-800">Akad Nikah</h3>
+                            <h3 class="font-serif text-2xl mb-4 text-rose-800 font-bold">Akad Nikah</h3>
                             <p class="font-light text-rose-700 text-lg">09.00 - 11.00 WIB</p>
                         </div>
                         <div class="pt-8 md:pt-0 md:pl-6">
-                            <h3 class="font-serif text-2xl mb-4 text-rose-800">Resepsi</h3>
+                            <h3 class="font-serif text-2xl mb-4 text-rose-800 font-bold">Resepsi</h3>
                             <p class="font-light text-rose-700 text-lg">13.00 - Selesai</p>
                         </div>
                     </div>
@@ -301,51 +355,65 @@
 
         <!-- Bagian Digital Gift -->
         <section class="py-24 px-6">
-            <div class="max-w-4xl mx-auto text-center">
+            <div class="max-w-5xl mx-auto text-center">
                 <h2 class="font-cursive text-5xl text-rose-900 mb-4 reveal">Digital Gift</h2>
-                <p class="font-serif italic text-gray-500 mb-12 reveal">Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika Anda ingin memberikan tanda kasih, Anda dapat mengirimkannya melalui:</p>
+                <p class="font-serif italic text-gray-600 mb-12 reveal">Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika Anda ingin memberikan tanda kasih, Anda dapat mengirimkannya melalui:</p>
                 
-                <div class="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+                <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                     <!-- Bank BSI -->
-                    <div class="glass-soft p-8 rounded-3xl reveal interactive">
+                    <div class="glass-soft p-8 rounded-3xl reveal interactive hover:-translate-y-2 transition-transform duration-300">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Bank_Syariah_Indonesia.svg" alt="BSI" class="h-8 mx-auto mb-6">
-                        <p class="text-xs uppercase tracking-widest text-gray-400 mb-1">Nomor Rekening</p>
+                        <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">Nomor Rekening</p>
                         <p id="rek-bsi" class="text-xl font-bold text-rose-900 mb-2">7254285301</p>
-                        <p class="text-sm text-gray-600 mb-6">a.n Nurmeida widi astuti</p>
-                        <button onclick="copyText('rek-bsi')" class="text-[10px] font-bold tracking-widest text-rose-500 border border-rose-200 px-6 py-2 rounded-full hover:bg-rose-500 hover:text-white transition-all uppercase">Salin Nomor</button>
+                        <p class="text-sm text-gray-600 mb-6 font-medium">a.n Nurmeida widi astuti</p>
+                        <button onclick="copyText('rek-bsi')" class="text-[10px] font-bold tracking-widest text-rose-500 border border-rose-200 px-6 py-2 rounded-full hover:bg-rose-500 hover:text-white transition-all uppercase w-full">Salin Nomor</button>
                     </div>
 
                     <!-- Bank BRI -->
-                    <div class="glass-soft p-8 rounded-3xl reveal interactive" style="transition-delay: 0.2s;">
+                    <div class="glass-soft p-8 rounded-3xl reveal interactive hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 0.2s;">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/BANK_BRI_logo_%28vertical%29.svg" alt="BRI" class="h-6 mx-auto mb-8">
-                        <p class="text-xs uppercase tracking-widest text-gray-400 mb-1">Nomor Rekening</p>
+                        <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">Nomor Rekening</p>
                         <p id="rek-bri" class="text-xl font-bold text-rose-900 mb-2">010701131579500</p>
-                        <p class="text-sm text-gray-600 mb-6">a.n Aep sahlani machya</p>
-                        <button onclick="copyText('rek-bri')" class="text-[10px] font-bold tracking-widest text-rose-500 border border-rose-200 px-6 py-2 rounded-full hover:bg-rose-500 hover:text-white transition-all uppercase">Salin Nomor</button>
+                        <p class="text-sm text-gray-600 mb-6 font-medium">a.n Aep sahlani machya</p>
+                        <button onclick="copyText('rek-bri')" class="text-[10px] font-bold tracking-widest text-rose-500 border border-rose-200 px-6 py-2 rounded-full hover:bg-rose-500 hover:text-white transition-all uppercase w-full">Salin Nomor</button>
+                    </div>
+
+                    <!-- Kirim Kado Fisik -->
+                    <div class="glass-soft p-8 rounded-3xl reveal interactive hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 0.4s;">
+                        <div class="h-8 mb-6 mx-auto text-rose-500 flex justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                            </svg>
+                        </div>
+                        <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">Kirim Kado</p>
+                        <p class="text-xl font-bold text-rose-900 mb-2">Alamat Mempelai</p>
+                        <p id="alamat-kado" class="text-sm text-gray-600 mb-6 line-clamp-2 leading-relaxed font-medium">Perumahan Bumi Asri, Blok d 7 No.5, RT.16/RW.3, Desa Pamijahan, Plumbon</p>
+                        <button onclick="copyText('alamat-kado')" class="text-[10px] font-bold tracking-widest text-rose-500 border border-rose-200 px-6 py-2 rounded-full hover:bg-rose-500 hover:text-white transition-all uppercase w-full">Salin Alamat</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Bagian Form RSVP -->
+        <!-- Bagian Form RSVP & WISHES -->
         <section id="rsvp" class="py-24 px-6 max-w-2xl mx-auto">
-            <div class="glass-soft p-12 rounded-[40px] reveal interactive text-center border-2 border-rose-100/50">
+            <!-- Form Card -->
+            <div class="glass-soft p-12 rounded-[40px] reveal interactive text-center border-2 border-rose-100/50 mb-12">
                 <div class="mb-8">
-                    <span class="text-rose-300 text-3xl">✉</span>
+                    <span class="text-rose-400 text-3xl">✉</span>
                     <h2 class="font-cursive text-5xl text-rose-900 mt-2">Konfirmasi Kehadiran</h2>
-                    <p class="text-gray-500 mt-4 font-serif italic">Mohon konfirmasi kehadiran Anda untuk membantu kami dalam persiapan acara.</p>
+                    <p class="text-gray-600 mt-4 font-serif italic">Mohon konfirmasi kehadiran Anda untuk membantu kami dalam persiapan acara.</p>
                 </div>
 
                 <form id="rsvpForm" onsubmit="handleRSVP(event)" class="space-y-5 text-left">
                     <div>
                         <label class="block text-[10px] uppercase tracking-widest text-rose-800 font-bold mb-2 ml-1">Nama Lengkap</label>
-                        <input type="text" id="rsvpName" required placeholder="Masukkan Nama Anda" class="w-full bg-white/70 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-rose-300 transition-all text-sm placeholder:text-gray-300">
+                        <input type="text" id="rsvpName" required placeholder="Masukkan Nama Anda" class="w-full bg-white/70 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-rose-300 transition-all text-sm placeholder:text-gray-400 border border-white/50">
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] uppercase tracking-widest text-rose-800 font-bold mb-2 ml-1">Jumlah Tamu</label>
-                            <select id="rsvpGuest" class="w-full bg-white/70 p-4 rounded-2xl outline-none text-sm text-gray-600 appearance-none focus:ring-2 focus:ring-rose-300 cursor-pointer">
+                            <select id="rsvpGuest" class="w-full bg-white/70 p-4 rounded-2xl outline-none text-sm text-gray-600 appearance-none focus:ring-2 focus:ring-rose-300 cursor-pointer border border-white/50">
                                 <option value="1">1 Orang</option>
                                 <option value="2">2 Orang</option>
                                 <option value="3">3 Orang</option>
@@ -354,17 +422,17 @@
                         </div>
                         <div>
                             <label class="block text-[10px] uppercase tracking-widest text-rose-800 font-bold mb-2 ml-1">Konfirmasi</label>
-                            <select id="rsvpStatus" class="w-full bg-white/70 p-4 rounded-2xl outline-none text-sm text-gray-600 appearance-none focus:ring-2 focus:ring-rose-300 cursor-pointer">
-                                <option value="hadir">Akan Hadir</option>
-                                <option value="tidak">Berhalangan</option>
-                                <option value="ragu">Masih Ragu</option>
+                            <select id="rsvpStatus" class="w-full bg-white/70 p-4 rounded-2xl outline-none text-sm text-gray-600 appearance-none focus:ring-2 focus:ring-rose-300 cursor-pointer border border-white/50">
+                                <option value="Hadir">Akan Hadir</option>
+                                <option value="Tidak Hadir">Berhalangan</option>
+                                <option value="Ragu">Masih Ragu</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-[10px] uppercase tracking-widest text-rose-800 font-bold mb-2 ml-1">Ucapan & Doa (Opsional)</label>
-                        <textarea id="rsvpMessage" rows="3" placeholder="Tuliskan pesan manis Anda..." class="w-full bg-white/70 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-rose-300 transition-all text-sm placeholder:text-gray-300 resize-none"></textarea>
+                        <textarea id="rsvpMessage" rows="3" placeholder="Tuliskan pesan manis Anda..." class="w-full bg-white/70 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-rose-300 transition-all text-sm placeholder:text-gray-400 resize-none border border-white/50"></textarea>
                     </div>
 
                     <button type="submit" class="w-full bg-rose-500 text-white py-5 rounded-2xl text-[11px] font-bold tracking-widest hover:bg-rose-600 transition-all shadow-xl active:scale-95 uppercase mt-4">
@@ -372,11 +440,46 @@
                     </button>
                 </form>
             </div>
+
+            <!-- Wishes Display Section -->
+            <div class="glass-soft p-8 rounded-[40px] reveal interactive">
+                <h3 class="font-serif text-2xl text-rose-900 mb-6 text-center font-bold">Ucapan & Doa</h3>
+                <div id="wishes-container" class="space-y-4 max-h-[400px] overflow-y-auto custom-scrollbar px-2">
+                    <!-- Dummy Data 1 -->
+                    <div class="bg-white/70 p-4 rounded-2xl border border-white shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-rose-900 text-sm">Dimas & Rina</h4>
+                            <span class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">Hadir</span>
+                        </div>
+                        <p class="text-gray-700 text-sm italic">"Selamat ya Aep & Meida! Semoga menjadi keluarga sakinah mawaddah warahmah."</p>
+                        <p class="text-[10px] text-gray-400 mt-2 text-right">Baru saja</p>
+                    </div>
+                    
+                    <!-- Dummy Data 2 -->
+                    <div class="bg-white/70 p-4 rounded-2xl border border-white shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-rose-900 text-sm">Pak Budi Santoso</h4>
+                            <span class="text-[10px] bg-red-100 text-red-700 px-2 py-1 rounded-full font-bold">Tidak Hadir</span>
+                        </div>
+                        <p class="text-gray-700 text-sm italic">"Mohon maaf belum bisa hadir karena ada dinas luar kota. Doa terbaik untuk kalian berdua."</p>
+                        <p class="text-[10px] text-gray-400 mt-2 text-right">1 jam yang lalu</p>
+                    </div>
+                     <!-- Dummy Data 3 -->
+                     <div class="bg-white/70 p-4 rounded-2xl border border-white shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-rose-900 text-sm">Siti Nurhaliza</h4>
+                            <span class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">Hadir</span>
+                        </div>
+                        <p class="text-gray-700 text-sm italic">"Happy Wedding Meida cantikk! Lancar sampai hari H yaaa 🥰"</p>
+                        <p class="text-[10px] text-gray-400 mt-2 text-right">2 jam yang lalu</p>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <footer class="py-20 text-center opacity-40">
+        <footer class="py-20 text-center opacity-70">
             <p class="font-cursive text-2xl mb-2 text-rose-900">Aep & Meida</p>
-            <p class="text-[9px] tracking-widest uppercase">Kami sangat menantikan kehadiran Anda</p>
+            <p class="text-[9px] tracking-widest uppercase font-bold text-rose-800">Kami sangat menantikan kehadiran Anda</p>
         </footer>
     </div>
 
@@ -420,25 +523,60 @@
             dummy.select();
             document.execCommand("copy");
             document.body.removeChild(dummy);
-            showToast("Nomor rekening berhasil disalin!");
+            
+            // Custom message if copying address
+            if(id === 'alamat-kado') {
+                showToast("Alamat berhasil disalin!");
+            } else {
+                showToast("Nomor rekening berhasil disalin!");
+            }
         }
 
+        // Updated RSVP Handler
         function handleRSVP(event) {
             event.preventDefault();
             const name = document.getElementById('rsvpName').value;
             const status = document.getElementById('rsvpStatus').value;
+            const message = document.getElementById('rsvpMessage').value || "Semoga lancar dan bahagia selalu!";
             
             const btn = event.target.querySelector('button');
             const originalText = btn.innerText;
             btn.innerText = "MENGIRIM...";
             btn.disabled = true;
 
+            // Simulate sending data
             setTimeout(() => {
+                // Add to wishes list
+                addWishToDisplay(name, status, message);
+                
                 showToast(`Terima kasih ${name}, konfirmasi Anda telah kami terima!`);
                 btn.innerText = originalText;
                 btn.disabled = false;
                 event.target.reset();
-            }, 1500);
+            }, 1000);
+        }
+
+        function addWishToDisplay(name, status, message) {
+            const container = document.getElementById('wishes-container');
+            
+            // Determine badge color
+            let badgeClass = "bg-gray-100 text-gray-700";
+            if(status === "Hadir") badgeClass = "bg-green-100 text-green-700";
+            if(status === "Tidak Hadir") badgeClass = "bg-red-100 text-red-700";
+            
+            const newWish = document.createElement('div');
+            newWish.className = "bg-white/70 p-4 rounded-2xl border border-white shadow-sm animate-fade-in";
+            newWish.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-bold text-rose-900 text-sm">${name}</h4>
+                    <span class="text-[10px] ${badgeClass} px-2 py-1 rounded-full font-bold">${status}</span>
+                </div>
+                <p class="text-gray-700 text-sm italic">"${message}"</p>
+                <p class="text-[10px] text-gray-400 mt-2 text-right">Baru saja</p>
+            `;
+            
+            // Add to top
+            container.insertBefore(newWish, container.firstChild);
         }
 
         let isPlaying = true;
